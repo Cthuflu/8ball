@@ -1,7 +1,7 @@
 
 # Custom ignore
-./responses.txt
-./token.key
+responses.txt
+token.key
 
 # Created by https://www.gitignore.io/api/node
 
