@@ -1,0 +1,14 @@
+{
+  "name": "8ball",
+  "version": "1.0.0",
+  "description": "A simple discord bot that shakes an 8 ball",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jacob Taylor Pfeiffer (Cthuflu)",
+  "license": "MIT",
+  "dependencies": {
+    "discord.js": "^11.2.1"
+  }
+}
