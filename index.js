@@ -1,9 +1,13 @@
 const Discord = require("discord.js");
-const client = new Discord.Client();
+let client = new Discord.Client();
+const Limiter = require("./limit.js");
+let limit = new Limiter(15000);
 const fs = require("fs");
 
+const clockEmoji = ["🕐", "🕑", "🕒", "🕓", "🕔", "🕕", "🕖", "🕗", "🕘", "🕙", "🕚", "🕛", "🕜", "🕝", "🕞", "🕟", "🕠", "🕡", "🕢", "🕣", "🕤", "🕥", "🕦", "🕧"];
+
 const re = /^(\>\s?r+o+ll+|\>\s?s+h+a+k+e+)(?:\s(.+))?/gim; // Regex to find out if a user types ">roll"
-var responses;
+let responses;
 fs.readFile('./responses.txt', "utf8", function(err, data) { // Allows custom responses
 	if(err) {
 		console.log("Can't read or find responses.txt, setting defaults");
@@ -22,14 +26,22 @@ client.on('ready', () => {
 });
 
 client.on('message', msg => {
-	var matches = re.exec(msg.content);
+	let matches = re.exec(msg.content);
+
   	if (!msg.author.bot && matches) {
-  		var rand = Math.floor(Math.random()*responses.length);
-  		if(matches[2]) {
-  			msg.reply("You asked: \"" + matches[2] + "\" - " + responses[rand]);
-  		} else {
-  			msg.reply(responses[rand]);
-  		}
+  		if(limit && limit.exists(msg.author.id)) { // Checks if a usage limit is in place
+  			for(let i = 0; i < Math.floor(Math.random()*5); i++) {
+				msg.react(clockEmoji[Math.floor(Math.random()*clockEmoji.length)]);
+  			}
+		} else {
+			var rand = Math.floor(Math.random()*responses.length);
+	  		if(matches[2]) {
+	  			msg.reply("You asked: \"" + matches[2] + "\" - " + responses[rand]);
+	  		} else {
+	  			msg.reply(responses[rand]);
+	  		}
+	  		limit.add(msg.author.id);
+		}
   	}
 });
 
